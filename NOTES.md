@@ -96,3 +96,21 @@
 - Learned .gitignore only prevents NEW files from being tracked - it doesn't
   retroactively untrack something Git is already watching, which is exactly
   why git rm --cached exists as a separate, necessary tool
+
+## 12th August 2026 — Day 4 (capstone) — Wired real Action Agent into /chat
+
+**What I did:**
+- Connected the real Action Agent (get_portfolio_value) into main.py's /chat
+  endpoint, replacing the mock - real routing, real DB query, real live price,
+  end to end through the actual API
+- Hit and fixed a genuine bug: used a variable (rows) before it was defined,
+  which crashed the endpoint with an unhandled exception (Internal Server Error)
+- Learned to push past "Internal Server Error" as an answer and actually find
+  the real traceback/root cause instead of accepting the vague message
+- Also caught and fixed a testing mistake: sent a request using the /docs
+  placeholder value ("string") instead of my real test user_id
+
+**What's next:**
+- Add real chat-based holding creation (parsing "I bought X shares of Y at Z"
+  into structured data) - currently only portfolio-checking is wired up
+- Build the RAG Agent, the last of the three

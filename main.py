@@ -1,12 +1,10 @@
 from fastapi import FastAPI
 from models import UserRequest, AgentResponse
 from agents.router import real_router
+from agents.action_agents import add_holding, get_portfolio_value
 import uuid
 
 app = FastAPI()
-
-def mock_action_tool(message: str) -> str:
-    return "Mock: added holding to portfolio (fake data)."
 
 def mock_rag_tool(message: str) -> str:
     return "Mock: this is a fake answer pulled from fake company notes."
@@ -17,13 +15,17 @@ def chat(request: UserRequest):
     route = real_router(request.message)
 
     if route == "action":
-        reply = mock_action_tool(request.message)
-        tools_called = ["mock_action_tool"]
+        if "portfolio" in request.message.lower() or "worth" in request.message.lower():
+            reply = get_portfolio_value(request.user_id)
+            tools_called = ["get_portfolio_value"]
+        else:
+            reply = "Action agent recognized this, but adding holdings via chat isn't wired up yet — use the direct function for now."
+            tools_called = ["add_holding (not yet connected)"]
     elif route == "rag":
         reply = mock_rag_tool(request.message)
         tools_called = ["mock_rag_tool"]
     else:
-        reply = "Mock: general chat response."
+        reply = "General chat response."
         tools_called = []
 
     return AgentResponse(

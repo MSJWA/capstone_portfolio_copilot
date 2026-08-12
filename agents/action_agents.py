@@ -48,7 +48,3 @@ def get_portfolio_value(user_id: str) -> str:
 
     summary = "\n".join(details)
     return f"Portfolio value: {total_value:.2f}\n{summary}"
-
-if __name__ == "__main__":
-    print(add_holding("test_user", "LUCK", 100, 458.75))
-    print(get_portfolio_value("test_user"))
