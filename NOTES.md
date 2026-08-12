@@ -77,3 +77,22 @@
 **What's next:**
 - Wire action_agent.py into main.py, replacing the last mock (mock_action_tool)
 - Then build the RAG Agent - the last of the three
+
+## 12th August 2026 — Day 3.5 (capstone) — Git tooling + .gitignore enforcement fix
+
+**What I did:**
+- Discovered .gitignore wasn't actually excluding __pycache__ and .env, because
+  they'd been tracked by Git before .gitignore rules existed to catch them
+- Installed standalone Git directly (GitHub Desktop's bundled Git wasn't
+  reachable from the terminal) - now available for real git commands going
+  forward, not just through the GUI
+- Used git rm --cached to properly untrack the affected files without deleting
+  them from disk
+- Checked commit history specifically - confirmed .env was never actually
+  pushed to GitHub at any point, so no secrets were ever exposed; this was a
+  local tracking issue only, nothing to rotate
+
+**What confused me / what I didn't know before today:**
+- Learned .gitignore only prevents NEW files from being tracked - it doesn't
+  retroactively untrack something Git is already watching, which is exactly
+  why git rm --cached exists as a separate, necessary tool
