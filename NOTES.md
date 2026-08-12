@@ -1,4 +1,4 @@
-## 08th August 2026 — Day 19: Capstone kickoff — RFC finalized, tracer bullet proven
+## 08th August 2026 — Day 01: Capstone kickoff — RFC finalized, tracer bullet proven
 
 **What I did:**
 - Started the capstone: Portfolio Copilot, a multi-agent PSX portfolio assistant
@@ -25,3 +25,26 @@
 **What's next:**
 - Sandbox & Swap (Step 4): replace the mock router with a real LLM classifier,
   replace mock tools with real Postgres/psxdata/RAG calls, one piece at a time
+
+## 12th August 2026 — Day 2 (capstone) — Real LLM router, code splitting
+
+**What I did:**
+- Split main.py into models.py, agents/router.py, and a slimmed-down main.py -
+  real project structure instead of one growing file
+- Swapped mock_router for a real LLM-based router using a system message and
+  max_tokens=5 for a cheap, single-word classification
+- Added a validation fallback (defaults to "general" if the LLM returns
+  something unexpected) - a real safety net, not just trusting the LLM blindly
+- Hit and fixed a genuine contract mismatch: AgentResponse's Literal type didn't
+  include "general", even though the router could return it - real Contract-
+  First Design catching a bug in practice, not just on paper
+
+**What confused me / what I didn't know before today:**
+- Used the "system" message role for the first time - separate from "user"
+  messages, used specifically for setting the LLM's behavior/instructions
+- Learned __init__.py is needed for Python to treat a folder as an importable
+  package
+
+**What's next:**
+- Swap the mock Action tool for real logic: Postgres holdings table + psxdata
+  live prices

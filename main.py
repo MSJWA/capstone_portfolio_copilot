@@ -1,29 +1,9 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Literal
+from models import UserRequest, AgentResponse
+from agents.router import real_router
 import uuid
 
 app = FastAPI()
-
-class UserRequest(BaseModel):
-    user_id: str
-    message: str
-
-class AgentResponse(BaseModel):
-    reply: str
-    agent_used: Literal["router", "action", "rag"]
-    tool_calls_made: list[str]
-    tokens_used: int
-    estimated_cost_usd: float
-    request_id: str
-
-def mock_router(message: str) -> str:
-    if "bought" in message.lower() or "portfolio" in message.lower():
-        return "action"
-    elif "why" in message.lower() or "what" in message.lower():
-        return "rag"
-    else:
-        return "router"
 
 def mock_action_tool(message: str) -> str:
     return "Mock: added holding to portfolio (fake data)."
@@ -34,7 +14,7 @@ def mock_rag_tool(message: str) -> str:
 @app.post("/chat", response_model=AgentResponse)
 def chat(request: UserRequest):
     request_id = str(uuid.uuid4())
-    route = mock_router(request.message)
+    route = real_router(request.message)
 
     if route == "action":
         reply = mock_action_tool(request.message)
