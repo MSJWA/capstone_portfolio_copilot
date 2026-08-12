@@ -48,3 +48,32 @@
 **What's next:**
 - Swap the mock Action tool for real logic: Postgres holdings table + psxdata
   live prices
+
+## 12th August 2026 — Day 3 (capstone) — Action Agent: real DB + real psxdata
+
+**What I did:**
+- Risk-tested psxdata standalone before building anything around it: confirmed
+  real historical price data works (with a documented sort-order quirk), confirmed
+  index constituent lookup works, and confirmed failure behavior (a specific,
+  catchable PSXServerError, after internal retries) using a fake ticker
+- Created the holdings table in the existing pgvector Postgres container - no new
+  infrastructure needed, reused the setup from months ago
+- Built action_agent.py: add_holding (real INSERT), get_current_price (wraps
+  psxdata with proper error handling), get_portfolio_value (loops holdings,
+  degrades gracefully per-ticker instead of crashing the whole request)
+- Fixed two real import bugs: a wrong module path (agents.db instead of db) and
+  running a submodule directly instead of using python -m for correct import
+  resolution
+- Verified the full chain end to end: real DB write, real live price fetch, real
+  calculated portfolio value
+
+**What confused me / what I didn't know before today:**
+- Learned psycopg2 vs sqlite3 - same concept (connect, cursor, execute, commit,
+  close) but psycopg2 needed because Postgres is a real standalone server, not
+  a built-in file-based database like SQLite
+- Learned python -m matters for how Python resolves imports when running a file
+  that's part of a package, vs running it as a standalone script
+
+**What's next:**
+- Wire action_agent.py into main.py, replacing the last mock (mock_action_tool)
+- Then build the RAG Agent - the last of the three
