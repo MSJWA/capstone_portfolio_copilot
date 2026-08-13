@@ -114,3 +114,20 @@
 - Add real chat-based holding creation (parsing "I bought X shares of Y at Z"
   into structured data) - currently only portfolio-checking is wired up
 - Build the RAG Agent, the last of the three
+
+## 13th August 2026 — Day 5 (capstone) — Real holding creation via chat, Action Agent complete
+
+**What I did:**
+- Built extract_holding_details in router.py - real tool-calling (same pattern
+  from months ago: describe a function, LLM extracts structured args, my code
+  executes it) applied to a genuine new feature, not a toy example
+- Wired it into main.py's action branch, distinguishing "buy" messages from
+  "check value" messages
+- Verified end to end: sent a natural sentence ("I bought 50 shares of MARI at
+  3500"), confirmed the LLM correctly parsed ticker/quantity/price, confirmed
+  the real row landed in Postgres (checked directly in pgAdmin, not just
+  trusted the API response), confirmed the updated portfolio value correctly
+  included both holdings with real live prices
+
+**What's next:**
+- Build the RAG Agent - the last of the three core agents

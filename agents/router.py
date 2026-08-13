@@ -1,6 +1,7 @@
 import os
 from groq import Groq
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -30,3 +31,35 @@ def real_router(message: str) -> str:
         route = "general"
 
     return route
+
+def extract_holding_details(message: str) -> dict | None:
+    tools = [
+        {
+            "type": "function",
+            "function": {
+                "name": "add_holding",
+                "description": "Extract stock purchase details from a message",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "ticker": {"type": "string", "description": "Stock ticker symbol, e.g. LUCK"},
+                        "quantity": {"type": "number"},
+                        "avg_cost": {"type": "number", "description": "Price per share"}
+                    },
+                    "required": ["ticker", "quantity", "avg_cost"]
+                }
+            }
+        }
+    ]
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": message}],
+        tools=tools
+    )
+
+    message_obj = response.choices[0].message
+    if message_obj.tool_calls:
+        args = json.loads(message_obj.tool_calls[0].function.arguments)
+        return args
+    return None
