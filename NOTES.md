@@ -131,3 +131,28 @@
 
 **What's next:**
 - Build the RAG Agent - the last of the three core agents
+
+## 13th August 2026 — Day 6 (capstone) — RAG Agent complete, all 3 agents functional
+
+**What I did:**
+- Built the RAG Agent: seeded company_notes with real content, embedded with
+  sentence-transformers, retrieved via pgvector's <-> operator - reused the
+  exact pattern from months ago, now wired into a real feature
+- Hit the same bug category twice: AgentResponse's Literal type didn't include
+  "rag" as a valid value, even though the router could return it - same root
+  cause as the earlier "general" bug, a hardcoded allow-list not kept in sync
+  with what the actual system can produce
+- Verified end to end: asked a real question about SAZEW, got a correctly
+  retrieved, grounded answer instead of a hallucinated or generic response
+- Also resolved a port-conflict error (a stray uvicorn process still running
+  from earlier) that was masking the real error for a while
+
+**What confused me / what I didn't know before today:**
+- Recognized a recurring bug pattern rather than treating it as a one-off - any
+  time a new possible state/route is added, every place that constrains valid
+  values needs updating too, or Pydantic (correctly) rejects it
+
+**What's next:**
+- All 3 agents work individually - next is proper LangGraph-based multi-agent
+  coordination (currently just if/else routing, not a true graph with shared
+  state), then structured logging, then the eval suite

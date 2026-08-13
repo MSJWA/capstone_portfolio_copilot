@@ -7,7 +7,7 @@ class UserRequest(BaseModel):
 
 class AgentResponse(BaseModel):
     reply: str
-    agent_used: Literal["router", "action", "general"]
+    agent_used: Literal["router", "action", "rag", "general"]
     tool_calls_made: list[str]
     tokens_used: int
     estimated_cost_usd: float
