@@ -156,3 +156,27 @@
 - All 3 agents work individually - next is proper LangGraph-based multi-agent
   coordination (currently just if/else routing, not a true graph with shared
   state), then structured logging, then the eval suite
+
+## 17th August 2026 — Day 7 (capstone) — Real LangGraph multi-agent architecture
+
+**What I did:**
+- Replaced the if/else routing in main.py with a genuine LangGraph StateGraph -
+  4 real nodes (router, action, rag, general), conditional edges based on the
+  router's classification, and a shared GraphState flowing through all of them
+- Learned the node-function pattern: unpack what you need from shared state,
+  call existing (unchanged) agent logic, return a partial state update -
+  LangGraph handles merging automatically
+- Went deep on the END marker - a built-in signal meaning "no next node," used
+  the same way I'd already seen it months ago in a lambda, now understood
+  explicitly as its own line
+- Hit and fixed a real file-location bug: graph.py ended up inside agents/
+  instead of the project root, causing a chain of import errors - fixed by
+  moving it and correcting the import paths on both sides
+- Verified the real graph now powers the live /chat endpoint - all three
+  routing paths (action, rag, general) confirmed working through the actual
+  API, not just the standalone graph.py test
+
+**What's next:**
+- Structured JSON logging with request_id correlation across the graph's nodes
+- The eval suite (10+ cases, adversarial per RFC's failure modes)
+- Deployment
